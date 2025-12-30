@@ -193,6 +193,11 @@ python3 ~/ros2_ws/src/my_py_pkg/scripts/live_plot_metrics_min.py
   <img src="docs/figures/realtime/TR1_live_e2d_rmse.png" alt="TR1 live e2d rmse" width="800"/>
 </p>
 
+[Screencast from 2025-12-30 00-25-08.webm](https://github.com/user-attachments/assets/fafc8df0-83fd-456d-9e58-756486a8d5e3)
+
+
+
+
 **Interprétation TR-1 (synthèse).**
 - `e2d` fluctue avec des pics (jitter / désalignement entre flux) ; la RMSE glissante suit une tendance plus lisse.
 - Une chute brutale de `e2d` peut indiquer un retour à une meilleure cohérence instantanée entre GT et estimation.
