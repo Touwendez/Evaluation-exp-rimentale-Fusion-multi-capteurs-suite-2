@@ -1,4 +1,4 @@
-# ROS2 Jazzy + CARLA — EKF (robot_localization) Multi-capteurs (Odom / IMU / GNSS)
+# ROS2 Jazzy + CARLA : EKF (robot_localization) Multi-capteurs (Odom / IMU / GNSS)
 
 Ce dépôt documente notre travail d’évaluation d’un **filtre de Kalman étendu (EKF)** avec **ROS2 Jazzy** et un rosbag CARLA.
 Nous comparons la sortie du filtre `/odometry/filtered` à la référence CARLA `/carla/hero/odometry`, en **offline (CSV)** et en **temps réel (topics ROS2)**.
@@ -20,7 +20,7 @@ Nous comparons la sortie du filtre `/odometry/filtered` à la référence CARLA 
 
 ---
 
-## 2) Objectif du projet
+## 2) Objectif
 
 1. Évaluer plusieurs configurations EKF et la **fusion multi-capteurs**.
 2. Calculer des métriques (RMSE, erreurs x/y, norme 2D, yaw, latence…).
@@ -29,11 +29,11 @@ Nous comparons la sortie du filtre `/odometry/filtered` à la référence CARLA 
 
 ---
 
-## 3) Rappel EKF — Prédiction / Correction (concept clé)
+## 3) Prédiction / Correction
 
 L’EKF alterne deux étapes :
 
-### 3.1 Prédiction (Prediction)
+### 3.1 Prédiction 
 L’état est propagé dans le temps via un modèle de mouvement et l’incertitude est mise à jour avec la covariance de processus **Q**.
 
 <p align="center">
@@ -42,7 +42,7 @@ L’état est propagé dans le temps via un modèle de mouvement et l’incertit
   <img src="docs/figures/ekf_equations/prediction_cov.svg" alt="prediction_cov" width="900"/>
 </p>
 
-### 3.2 Correction (Update)
+### 3.2 Correction 
 À l’arrivée d’une mesure, l’état est corrigé via le gain de Kalman, pondéré par la covariance de mesure **R** (confiance capteur).
 
 <p align="center">
@@ -64,7 +64,7 @@ L’état est propagé dans le temps via un modèle de mouvement et l’incertit
 
 ## 4) Démarrage rapide
 
-### 4.1 Sourcing
+### 4.1 Sources
 ```bash
 source /opt/ros/jazzy/setup.bash
 source ~/ros2_ws/install/setup.bash
@@ -92,7 +92,7 @@ timeout 3 ros2 topic echo /clock --once
 
 ---
 
-### RUN1 — EKF odom seul
+### RUN1 : EKF odom seul
 **Contexte.** Le filtre utilise uniquement l’odométrie comme mesure de correction.
 
 **Figures (RUN1).**
@@ -116,7 +116,7 @@ timeout 3 ros2 topic echo /clock --once
 
 ---
 
-### RUN2 — EKF odom + IMU
+### RUN2 : EKF odom + IMU
 **Contexte.** Ajout de l’IMU : le filtre corrige aussi l’orientation/taux angulaire selon la configuration.
 
 **Figures (RUN2).**
@@ -139,7 +139,7 @@ timeout 3 ros2 topic echo /clock --once
 
 ---
 
-### RUN3 — EKF odom + IMU + GNSS (pipeline GNSS)
+### RUN3 : EKF odom + IMU + GNSS (pipeline GNSS)
 **Contexte.** Fusion GNSS avec `navsat_transform_node` pour obtenir une estimation globale (selon la configuration de la stack).
 
 **Figures (RUN3).**
@@ -188,7 +188,7 @@ timeout 5 ros2 topic echo /metrics/e2d --once
 python3 ~/ros2_ws/src/my_py_pkg/scripts/live_plot_metrics_min.py
 ```
 
-**Figure TR-1 — Capture d’une courbe live (e2d + RMSE fenêtre).**
+**Figure TR-1 : Capture d’une courbe live (e2d + RMSE fenêtre).**
 <p align="center">
   <img src="docs/figures/realtime/TR1_live_e2d_rmse.png" alt="TR1 live e2d rmse" width="800"/>
 </p>
