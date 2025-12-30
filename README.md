@@ -193,7 +193,6 @@ python3 ~/ros2_ws/src/my_py_pkg/scripts/live_plot_metrics_min.py
   <img src="docs/figures/realtime/TR1_live_e2d_rmse.png" alt="TR1 live e2d rmse" width="800"/>
 </p>
 
-[Screencast from 2025-12-30 00-25-08.webm](https://github.com/user-attachments/assets/fafc8df0-83fd-456d-9e58-756486a8d5e3)
 
 
 
@@ -202,6 +201,18 @@ python3 ~/ros2_ws/src/my_py_pkg/scripts/live_plot_metrics_min.py
 - `e2d` fluctue avec des pics (jitter / désalignement entre flux) ; la RMSE glissante suit une tendance plus lisse.
 - Une chute brutale de `e2d` peut indiquer un retour à une meilleure cohérence instantanée entre GT et estimation.
 - Cette chaîne valide l’objectif “temps réel” attendu : topics → métriques → visualisation live.
+
+[Screencast from 2025-12-30 00-25-08.webm](https://github.com/user-attachments/assets/fafc8df0-83fd-456d-9e58-756486a8d5e3)
+
+
+## prédiction / correction 
+
+Dans RUN1, l’EKF (`robot_localization`) estime la pose du véhicule uniquement à partir de l’odométrie. Il fonctionne en boucle avec deux étapes :
+
+- **Prédiction :** entre deux messages d’odom, le filtre fait “avancer” l’état (position, yaw, vitesses) avec un modèle de mouvement et augmente son incertitude via **Q** (incertitude du modèle).
+- **Correction :** à chaque message d’odom, il compare la mesure à la prédiction, calcule un résidu, puis corrige l’estimation. La force de la correction dépend de **R_odom** : plus **R_odom** est faible, plus l’odom est jugée fiable et plus l’EKF suit la mesure.
+
+Cela explique pourquoi `/odometry/filtered` suit très bien la trajectoire de référence. En temps réel, `e2d` (et la RMSE sur fenêtre glissante) mesurent en continu l’écart GT–EKF ; des pics peuvent apparaître non seulement à cause de l’estimation, mais aussi à cause d’un léger désalignement temporel entre les flux (méthode d’appariement *arrival-time*).
 
 ---
 
